@@ -117,44 +117,16 @@ document.addEventListener('DOMContentLoaded', () => {
   revealElements.forEach(el => revealObserver.observe(el));
 
   // ============================================
-  // COUNTER ANIMATION
+  // STATS DISPLAY (Always show real values immediately)
   // ============================================
   const counterNumbers = document.querySelectorAll('.counter-number');
-  let countersAnimated = false;
-
-  function formatNumber(num) {
-    if (num >= 100000) return '100K+';
-    if (num >= 1000) return num.toLocaleString() + '+';
-    return num + '+';
-  }
-
-  function animateCounters() {
-    if (countersAnimated) return;
-    countersAnimated = true;
-    counterNumbers.forEach(counter => {
-      const target = parseInt(counter.dataset.target);
-      const duration = 2000;
-      const startTime = performance.now();
-      function updateCounter(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        counter.textContent = formatNumber(Math.round(eased * target));
-        if (progress < 1) requestAnimationFrame(updateCounter);
-      }
-      requestAnimationFrame(updateCounter);
-    });
-  }
-
-  const counterSection = document.querySelector('.counter-section');
-  if (counterSection) {
-    const counterObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) { animateCounters(); counterObserver.unobserve(entry.target); }
-      });
-    }, { threshold: 0.3 });
-    counterObserver.observe(counterSection);
-  }
+  counterNumbers.forEach(counter => {
+    const target = parseInt(counter.dataset.target);
+    if (target === 1000000) counter.textContent = '1 Million+';
+    else if (target === 500) counter.textContent = '500+';
+    else if (target === 15) counter.textContent = '15+';
+    else if (target === 12) counter.textContent = '12+';
+  });
 
   // ============================================
   // SMOOTH SCROLL
